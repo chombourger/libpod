@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+override_dh_auto_clean:
+	rm -rf debian/podman vendor
+	dh_clean
+
+override_dh_auto_build:
+	export GOPATH=$(CURDIR)/build-go && \
+	mkdir -p $$GOPATH && \
+	make vendor && \
+	mkdir -p $$GOPATH/src/github.com && \
+	ln -sf ../../../vendor/github.com/varlink $$GOPATH/src/github.com && \
+	unset LDFLAGS && \
+	make BUILDTAGS="selinux seccomp exclude_graphdriver_btrfs" && \
+	make DESTDIR=$(CURDIR)/debian/podman PREFIX=/usr install
+	     
+
+override_dh_auto_test:
+	true
+
+override_dh_auto_install:
+	true
+
+%:
+	dh $@
