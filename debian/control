@@ -33,6 +33,7 @@ Architecture: any
 Built-Using: ${misc:Built-Using}
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+         conmon,
          slirp4netns
 Description: Manage pods, containers, and container images
  Podman is a daemonless container engine for developing, managing, and running
