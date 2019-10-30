@@ -24,6 +24,9 @@ override_dh_auto_install:
 	mv install-go debian/podman
 	mkdir -p debian/podman//etc/sysctl.d
 	echo 'kernel.unprivileged_userns_clone=1' >debian/podman/etc/sysctl.d/podman.conf
+	mkdir -p debian/podman/etc/containers
+	install -m 644 debian/policy.json debian/podman/etc/containers/
+	install -m 644 debian/registries.conf debian/podman/etc/containers/
 
 %:
 	dh $@
