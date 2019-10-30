@@ -32,7 +32,8 @@ Package: podman
 Architecture: any
 Built-Using: ${misc:Built-Using}
 Depends: ${misc:Depends},
-         ${shlibs:Depends}
+         ${shlibs:Depends},
+         slirp4netns
 Description: Manage pods, containers, and container images
  Podman is a daemonless container engine for developing, managing, and running
  OCI Containers on your Linux System. Containers can either be run as root or
