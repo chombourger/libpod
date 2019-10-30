@@ -1,25 +1,27 @@
 #!/usr/bin/make -f
 
+GOPATH=$(CURDIR)/build-go
+
 override_dh_auto_clean:
-	rm -rf debian/podman vendor
+	[ ! -d build-go ] || find build-go -type d|xargs chmod 755
+	rm -rf build-go install-go debian/podman vendor
 	dh_clean
 
 override_dh_auto_build:
-	export GOPATH=$(CURDIR)/build-go && \
+	export GOPATH=$(GOPATH) && \
 	mkdir -p $$GOPATH && \
 	make vendor && \
-	mkdir -p $$GOPATH/src/github.com && \
-	ln -sf ../../../vendor/github.com/varlink $$GOPATH/src/github.com && \
+	mkdir -p $(GOPATH)/src/github.com && \
+	ln -sf ../../../vendor/github.com/varlink $(GOPATH)/src/github.com && \
 	unset LDFLAGS && \
 	make BUILDTAGS="selinux seccomp exclude_graphdriver_btrfs" && \
-	make DESTDIR=$(CURDIR)/debian/podman PREFIX=/usr install
-	     
+	make DESTDIR=$(CURDIR)/install-go PREFIX=/usr install
 
 override_dh_auto_test:
 	true
 
 override_dh_auto_install:
-	true
+	mv install-go debian/podman
 
 %:
 	dh $@

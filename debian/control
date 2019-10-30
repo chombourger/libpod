@@ -28,7 +28,7 @@ Build-Depends: debhelper (>= 11),
 Standards-Version: 4.2.1
 Homepage: https://github.com/containers/libpod
 
-Package: libpod
+Package: podman
 Architecture: any
 Built-Using: ${misc:Built-Using}
 Depends: ${misc:Depends},
