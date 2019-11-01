@@ -1,1 +1,1 @@
-extend-diff-ignore = "(^|/)vendor/k8s.io/client-go/pkg/version/base.go$"
+extend-diff-ignore = "(^|/)(_output|.*\.[0-9]|varlink/iopodman.go|version/base.go)$"

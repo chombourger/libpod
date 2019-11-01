@@ -2,7 +2,6 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: libpod
 Source: https://github.com/containers/libpod
 Files-Excluded:
-  vendor
   Godeps/_workspace
 
 Files: *
