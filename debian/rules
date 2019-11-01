@@ -17,7 +17,7 @@ override_dh_auto_build:
 	make BUILDTAGS="selinux seccomp exclude_graphdriver_btrfs" \
 		DESTDIR=$(CURDIR)/bin/install \
 		PREFIX=/usr \
-		install
+		all install
 
 override_dh_auto_test:
 	true
