@@ -26,7 +26,5 @@ if [ ${OS_TEST} -eq 0 ]; then
     sed -i "s/${BR}/${NEWBR}/g" contrib/spec/podman.spec
 fi
 
-mkdir build/
+mkdir -p build/
 git archive --prefix "libpod-${COMMIT_SHORT}/" --format "tar.gz" HEAD -o "build/libpod-${COMMIT_SHORT}.tar.gz"
-git clone https://github.com/containers/conmon
-cd conmon && git checkout 6f3572558b97bc60dd8f8c7f0807748e6ce2c440 && git archive --prefix "conmon/" --format "tar.gz" HEAD -o "../build/conmon.tar.gz"
