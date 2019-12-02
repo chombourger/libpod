@@ -1,3 +1,9 @@
+libpod (1.6.3-bionic1) bionic; urgency=medium
+
+  * New upstream release
+
+ -- Cedric Hombourger <chombourger@gmail.com>  Mon, 02 Dec 2019 08:10:52 +0100
+
 libpod (1.6.2-bionic1) bionic; urgency=medium
 
   * Initial release
