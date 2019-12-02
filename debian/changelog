@@ -1,3 +1,9 @@
+libpod (1.6.3-buster1) buster; urgency=medium
+
+  * New upstream release
+
+ -- Cedric Hombourger <chombourger@gmail.com>  Mon, 02 Dec 2019 08:10:52 +0100
+
 libpod (1.6.2-buster1) buster; urgency=medium
 
   * Initial release
