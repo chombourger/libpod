@@ -1,0 +1,5 @@
+libpod (1.8.0-buster1) buster; urgency=medium
+
+  * New upstream release
+
+ -- Cedric Hombourger <chombourger@gmail.com>  Tue, 18 Feb 2020 21:42:35 +0100

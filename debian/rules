@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+GOPATH=$(CURDIR)/build
+
+override_dh_auto_clean:
+	[ ! -d $(GOPATH) ] || find $(GOPATH) -type d|xargs chmod 755
+	[ ! -d _output ] || find _output -type d|xargs chmod 755
+	rm -rf $(GOPATH) _output bin debian/podman
+	dh_clean
+
+override_dh_auto_build:
+	export GOPATH=$(GOPATH) && \
+	mkdir -p $$GOPATH && \
+	mkdir -p $(GOPATH)/src/github.com && \
+	rm -rf bin && \
+	ln -sf ../../../vendor/github.com/varlink $(GOPATH)/src/github.com && \
+	unset LDFLAGS && \
+	make BUILDTAGS="selinux seccomp systemd exclude_graphdriver_btrfs" \
+		DESTDIR=$(CURDIR)/bin/install \
+		PREFIX=/usr \
+		all install
+
+override_dh_auto_test:
+	true
+
+override_dh_auto_install:
+	mkdir -p debian/podman
+	mv bin/install/* debian/podman
+	mkdir -p debian/podman/etc/sysctl.d
+	echo 'kernel.unprivileged_userns_clone=1' >debian/podman/etc/sysctl.d/podman.conf
+	mkdir -p debian/podman/etc/containers
+	install -m 644 debian/policy.json debian/podman/etc/containers/
+	install -m 644 debian/registries.conf debian/podman/etc/containers/
+
+%:
+	dh $@
