@@ -1,0 +1,41 @@
+Source: libpod
+Section: devel
+Priority: optional
+Maintainer: Cedric Hombourger <chombourger@gmail.com>
+Build-Depends: debhelper (>= 11),
+               dh-golang,
+               golang-any,
+               btrfs-tools,
+               git,
+               golang-go,
+               go-md2man,
+               iptables,
+               libassuan-dev,
+               libc6-dev (>= 2.27),
+               libdevmapper-dev,
+               libglib2.0-dev,
+               libgpgme-dev,
+               libgpg-error-dev,
+               libostree-dev,
+               libprotobuf-dev,
+               libprotobuf-c-dev,
+               libseccomp-dev,
+               libselinux1-dev,
+               libsystemd-dev,
+               pkg-config,
+               uidmap
+Standards-Version: 4.2.1
+Homepage: https://github.com/containers/libpod
+
+Package: podman
+Architecture: any
+Built-Using: ${misc:Built-Using}
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         conmon,
+         runc,
+         slirp4netns
+Description: Manage pods, containers, and container images
+ Podman is a daemonless container engine for developing, managing, and running
+ OCI Containers on your Linux System. Containers can either be run as root or
+ in rootless mode
