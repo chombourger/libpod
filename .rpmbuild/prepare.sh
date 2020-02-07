@@ -30,10 +30,3 @@ fi
 
 mkdir -p build/
 git archive --prefix "libpod-${COMMIT_SHORT}/" --format "tar.gz" HEAD -o "build/libpod-${COMMIT_SHORT}.tar.gz"
-if [ ! -d conmon ]; then
-    git clone -n --quiet https://github.com/containers/conmon
-fi
-pushd conmon
-git checkout --detach d532caebc788fafdd2a305b68cd1983b4039bea4
-git archive --prefix "conmon/" --format "tar.gz" HEAD -o "../build/conmon.tar.gz"
-popd
