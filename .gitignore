@@ -8,6 +8,7 @@
 /docs/build/
 *.o
 *.orig
+*.src.rpm
 /pause/pause.o
 /bin/
 /test/bin2img/bin2img

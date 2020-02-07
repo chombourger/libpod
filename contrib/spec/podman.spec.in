@@ -2,6 +2,7 @@
 %global with_bundled 1
 %global with_check 0
 %global with_unit_test 0
+%global debug_package %{nil}
 %bcond_without doc
 %bcond_without debug
 
@@ -9,13 +10,6 @@
 %bcond_without varlink
 %else
 %bcond_with varlink
-%endif
-
-%if %{with debug}
-%global _find_debuginfo_dwz_opts %{nil}
-%global _dwz_low_mem_die_limit 0
-%else
-%global debug_package   %{nil}
 %endif
 
 # %if ! 0% {?gobuild:1}
@@ -36,12 +30,6 @@
 %global commit0 #COMMIT#
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:8})
 
-# People want conmon packaged with the copr rpm
-%global import_path_conmon      github.com/containers/conmon
-%global git_conmon      https://%{import_path_conmon}
-%global commit_conmon   d532caebc788fafdd2a305b68cd1983b4039bea4
-%global shortcommit_conmon %(c=%{commit_conmon}; echo ${c:0:7})
-
 Name: podman
 Version: 1.8.0
 Release: #COMMITDATE#.git%{shortcommit0}%{?dist}
@@ -49,7 +37,6 @@ Summary: Manage Pods, Containers and Container Images
 License: ASL 2.0
 URL: %{git_podman}
 Source0: %{git0}/archive/%{commit0}/%{repo}-%{shortcommit0}.tar.gz
-Source1: conmon.tar.gz
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
 #ExclusiveArch:  %%{?go_arches:%%{go_arches}}%%{!?go_arches:%%{ix86} x86_64 aarch64 %%{arm}}
 ExclusiveArch: aarch64 %{arm} ppc64le s390x x86_64
@@ -369,9 +356,6 @@ Man pages for the %{name} commands
 %prep
 %autosetup -Sgit -n %{repo}-%{shortcommit0}
 
-# untar conmon
-tar zxf %{SOURCE1}
-
 sed -i 's/install.remote: podman-remote/install.remote:/' Makefile
 sed -i 's/install.bin: podman/install.bin:/' Makefile
 %if %{with doc}
@@ -388,25 +372,11 @@ ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd):$(pwd):%{gopath}
 export BUILDTAGS="varlink selinux seccomp $(%{hackdir}/hack/btrfs_installed_tag.sh) $(%{hackdir}/hack/btrfs_tag.sh) $(%{hackdir}/hack/libdm_tag.sh) exclude_graphdriver_devicemapper"
 
-GOPATH=$GOPATH go generate ./cmd/podman/varlink/...
-
 %if %{with doc}
 BUILDTAGS=$BUILDTAGS make binaries docs
 %else
 BUILDTAGS=$BUILDTAGS make binaries
 %endif
-# build conmon
-pushd conmon
-
-mkdir _output
-pushd _output
-mkdir -p src/%{provider}.%{provider_tld}/{containers,opencontainers}
-ln -s $(dirs +1 -l) src/%{import_path_conmon}
-popd
-
-export BUILDTAGS="selinux seccomp $(%{hackdir}/hack/btrfs_installed_tag.sh) $(%{hackdir}/hack/btrfs_tag.sh)"
-BUILDTAGS=$BUILDTAGS make
-popd
 
 %install
 install -dp %{buildroot}%{_unitdir}
@@ -433,10 +403,6 @@ mv pkg/hooks/README.md pkg/hooks/README-hooks.md
 # install libpod.conf
 install -dp %{buildroot}%{_datadir}/containers
 install -p -m 644 %{repo}.conf %{buildroot}%{_datadir}/containers
-
-# install conmon
-install -dp %{buildroot}%{_libexecdir}/%{name}
-install -p -m 755 conmon/bin/conmon %{buildroot}%{_libexecdir}/%{name}
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -511,7 +477,6 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 %{_bindir}/%{name}
 %{_datadir}/bash-completion/completions/*
 %{_datadir}/zsh/site-functions/*
-%{_libexecdir}/%{name}/conmon
 %config(noreplace) %{_sysconfdir}/cni/net.d/87-%{name}-bridge.conflist
 %{_datadir}/containers/%{repo}.conf
 %{_unitdir}/io.podman.service
